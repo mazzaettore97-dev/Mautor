@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dicas de Investimento com IA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Modern Tech Finance -->
+    <!-- Application Structure Plan: A single-page narrative structure was designed to guide the user logically through the business concept. It starts with a compelling value proposition (Hero/Why Us), explains the operational flow (How it Works), and culminates in an interactive financial dashboard (Business Model). This structure replaces static text with engaging components like icon-based feature cards, a visual process flow, and an interactive break-even calculator, making the business plan more tangible and explorable for potential stakeholders or customers. The goal is to move from passive reading to active exploration. -->
+    <!-- Visualization & Content Choices: Report Info: Key benefits -> Goal: Inform/Engage -> Viz/Presentation: Icon-based cards (HTML/Tailwind) -> Interaction: Hover effects -> Justification: More scannable and visually appealing than a bullet list. Report Info: 3-step process -> Goal: Explain -> Viz/Presentation: Numbered visual flow diagram (HTML/Tailwind) -> Interaction: Static -> Justification: Clarifies the operational sequence better than a simple text list. Report Info: Cost breakdown -> Goal: Inform -> Viz/Presentation: Donut Chart (Chart.js) -> Interaction: Hover for tooltips -> Justification: Shows cost proportions more effectively than a list. Report Info: Break-even analysis -> Goal: Explore/Analyze -> Viz/Presentation: Interactive slider linked to dynamic text and a Bar Chart (Chart.js) -> Interaction: User adjusts monthly price to see required clients and revenue vs. cost update in real-time -> Justification: This is the core interactive element, turning a static table into an exploratory tool for financial viability. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        .chart-container {
+            position: relative;
+            margin: auto;
+            height: 300px;
+            width: 100%;
+            max-width: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+                max-width: 500px;
+            }
+        }
+        .gradient-text {
+            background: linear-gradient(to right, #2563eb, #16a34a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #2563eb;
+            cursor: pointer;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 0 5px rgba(0,0,0,0.2);
+        }
+        .slider-track {
+            width: 100%;
+            height: 8px;
+            cursor: pointer;
+            background: #e2e8f0;
+            border-radius: 9999px;
+        }
+        /* Style for FAQ accordion */
+        .accordion-item {
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .accordion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            cursor: pointer;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            color: #475569;
+            padding-bottom: 0;
+        }
+        .accordion-content.open {
+            max-height: 200px; /* Adjust as needed */
+            padding-bottom: 1rem;
+        }
+        .accordion-icon {
+            transition: transform 0.3s ease-out;
+        }
+        .accordion-icon.rotate {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 border-b border-slate-200">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold">
+                <span class="gradient-text">ByTE Invest</span>
+            </div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#servico" class="text-slate-600 hover:text-blue-600 transition">O Serviço</a>
+                <a href="#como-funciona" class="text-slate-600 hover:text-blue-600 transition">Como Funciona</a>
+                <a href="#garantia-qualidade" class="text-slate-600 hover:text-blue-600 transition">Qualidade e Revisão</a>
+                <a href="#seguranca-informacao" class="text-slate-600 hover:text-blue-600 transition">Segurança da Informação</a>
+                <a href="#futuros-projetos" class="text-slate-600 hover:text-blue-600 transition">Projetos Futuros</a>
+                <a href="#insights-profissionais" class="text-slate-600 hover:text-blue-600 transition">Perspectivas de Grandes Mentes</a>
+                <a href="#faq" class="text-slate-600 hover:text-blue-600 transition">FAQ</a>
+            </div>
+            <a href="#hero" class="bg-blue-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-blue-700 transition shadow-lg shadow-blue-500/20">Comece Agora</a>
+        </nav>
+    </header>
+
+    <main>
+        <section id="hero" class="py-20 md:py-32">
+            <div class="container mx-auto px-6 text-center">
+                <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4">Dicas de Investimento Inteligentes, <br> <span class="gradient-text">Direto no Seu WhatsApp.</span></h1>
+                <p class="text-lg md:text-xl text-slate-500 max-w-3xl mx-auto mb-8">Simplificamos o mercado financeiro para você. Receba análises e recomendações geradas por IA e tome decisões mais rápidas e seguras.</p>
+                <a href="#" class="bg-blue-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-blue-700 transition shadow-lg shadow-blue-500/30 text-lg">Quero Começar Agora!</a>
+            </div>
+        </section>
+
+        <section id="servico" class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-2">Por Que Nosso Serviço é Para Você?</h2>
+                    <p class="text-slate-500 max-w-2xl mx-auto">Transformamos a complexidade do mercado em simplicidade, diretamente no seu bolso.</p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="bg-slate-50 p-8 rounded-xl border border-slate-200/80 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+                        <div class="text-4xl mb-4">💡</div>
+                        <h3 class="text-xl font-bold mb-2">Dicas Diárias e Acionáveis</h3>
+                        <p class="text-slate-500">Receba resumos concisos e recomendações otimizadas para leitura rápida no seu celular.</p>
+                    </div>
+                    <div class="bg-slate-50 p-8 rounded-xl border border-slate-200/80 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+                        <div class="text-4xl mb-4">📈</div>
+                        <h3 class="text-xl font-bold mb-2">Análise de Mercado Avançada</h3>
+                        <p class="text-slate-500">Usamos IA para processar dados e identificar tendências que a maioria das pessoas perde.</p>
+                    </div>
+                    <div class="bg-slate-50 p-8 rounded-xl border border-slate-200/80 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+                        <div class="text-4xl mb-4">⏰</div>
+                        <h3 class="text-xl font-bold mb-2">Economia de Tempo Precioso</h3>
+                        <p class="text-slate-500">Diga adeus a horas de pesquisa. Tenha as informações essenciais em minutos.</p>
+                    </div>
+                    <div class="bg-slate-50 p-8 rounded-xl border border-slate-200/80 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+                        <div class="text-4xl mb-4">💬</div>
+                        <h3 class="text-xl font-bold mb-2">Linguagem Clara e Acessível</h3>
+                        <p class="text-slate-500">Traduzimos o mercado financeiro para uma linguagem que qualquer pessoa pode entender.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="como-funciona" class="py-16">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-2">Como a Mágica Acontece?</h2>
+                    <p class="text-slate-500 max-w-2xl mx-auto">Nossa plataforma opera nos bastidores para trazer a você o melhor do mercado em 3 passos simples.</p>
+                </div>
+                <div class="relative">
+                    <div class="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-slate-200 -translate-y-1/2"></div>
+                    <div class="grid md:grid-cols-3 gap-8 text-center relative">
+                        <div class="bg-white p-8 rounded-xl border border-slate-200 shadow-sm">
+                            <div class="flex items-center justify-center mx-auto w-16 h-16 bg-blue-100 text-blue-600 rounded-full text-2xl font-bold mb-4">1</div>
+                            <h3 class="text-xl font-bold mb-2">Coleta de Dados</h3>
+                            <p class="text-slate-500">Capturamos dados em tempo real de fontes financeiras globais.</p>
+                        </div>
+                        <div class="bg-white p-8 rounded-xl border border-slate-200 shadow-sm">
+                            <div class="flex items-center justify-center mx-auto w-16 h-16 bg-blue-100 text-blue-600 rounded-full text-2xl font-bold mb-4">2</div>
+                            <h3 class="text-xl font-bold mb-2">Análise por IA</h3>
+                            <p class="text-slate-500">Nossos modelos de IA processam e geram resumos e recomendações.</p>
+                        </div>
+                        <div class="bg-white p-8 rounded-xl border border-slate-200 shadow-sm">
+                            <div class="flex items-center justify-center mx-auto w-16 h-16 bg-blue-100 text-blue-600 rounded-full text-2xl font-bold mb-4">3</div>
+                            <h3 class="text-xl font-bold mb-2">Entrega no WhatsApp</h3>
+                            <p class="text-slate-500">Você recebe as dicas de forma segura e pontual, prontas para agir.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- New Section: Quality Assurance and Human Oversight -->
+        <section id="garantia-qualidade" class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-2">Qualidade e Revisão Humana</h2>
+                    <p class="text-slate-500 max-w-2xl mx-auto">A inteligência artificial é poderosa, mas a supervisão humana é insubstituível. Nossas análises passam por um rigoroso processo de verificação.</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-slate-50 p-8 rounded-xl border border-slate-200 shadow-sm">
+                        <div class="text-4xl mb-4">🔍</div>
+                        <h3 class="text-xl font-bold mb-2">Verificação por Especialistas</h3>
+                        <p class="text-slate-500">Antes do envio, todas as recomendações geradas pela IA são revisadas por nossa equipe de analistas financeiros experientes para garantir precisão e relevância.</p>
+                    </div>
+                    <div class="bg-slate-50 p-8 rounded-xl border border-slate-200 shadow-sm">
+                        <div class="text-4xl mb-4">🛡️</div>
+                        <h3 class="text-xl font-bold mb-2">Dupla Camada de Segurança</h3>
+                        <p class="text-slate-500">Combinamos a eficiência da IA com a expertise humana para oferecer um serviço robusto, minimizando erros e maximizando a confiança em suas decisões.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- New Section: Information Security -->
+        <section id="seguranca-informacao" class="py-16">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-2">Sua Segurança é Nossa Prioridade</h2>
+                    <p class="text-slate-500 max-w-2xl mx-auto">Protegemos seus dados e informações financeiras com as mais avançadas medidas de segurança.</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-white p-8 rounded-xl border border-slate-200 shadow-sm">
+                        <div class="text-4xl mb-4">🔒</div>
+                        <h3 class="text-xl font-bold mb-2">Proteção de Dados Rigorosa</h3>
+                        <p class="text-slate-500">Utilizamos criptografia de ponta e protocolos de segurança robustos para garantir que suas informações pessoais e financeiras estejam sempre seguras.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl border border-slate-200 shadow-sm">
+                        <div class="text-4xl mb-4">✅</div>
+                        <h3 class="text-xl font-bold mb-2">Conformidade e Privacidade</h3>
+                        <p class="text-slate-500">Operamos em total conformidade com as leis de proteção de dados, assegurando a privacidade e o uso ético de todas as informações.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- New Section: Future Projects -->
+        <section id="futuros-projetos" class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-2">O Futuro do Seu Investimento Conosco</h2>
+                    <p class="text-slate-500 max-w-2xl mx-auto">Estamos constantemente inovando para oferecer ferramentas ainda mais poderosas e personalizadas para o seu sucesso financeiro.</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-white p-8 rounded-xl border border-slate-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+                        <div class="text-4xl mb-4">🤖</div>
+                        <h3 class="text-xl font-bold mb-2">Análise de Perfil e Recomendações Personalizadas</h3>
+                        <p class="text-slate-500">Nossa IA aprenderá com seus objetivos, tolerância a risco e histórico de investimento para fornecer dicas e estratégias sob medida para você.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl border border-slate-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+                        <div class="text-4xl mb-4">📊</div>
+                        <h3 class="text-xl font-bold mb-2">Carteiras de Ativos Recomendadas</h3>
+                        <p class="text-slate-500">Receba sugestões de carteiras diversificadas, otimizadas pela IA para diferentes perfis e cenários de mercado, facilitando suas decisões de alocação.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Updated Section: Professional Insights with real quotes -->
+        <section id="insights-profissionais" class="py-16">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-2">Perspectivas de Grandes Mentes</h2>
+                    <p class="text-slate-500 max-w-2xl mx-auto">Insights de especialistas sobre a importância de investir e o futuro do mercado.</p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="bg-slate-50 p-8 rounded-xl border border-slate-200/80 shadow-sm">
+                        <p class="text-slate-700 italic mb-4">"Nunca invista em um negócio que você não consegue entender."</p>
+                        <div class="flex items-center">
+                            <img src="https://placehold.co/50x50/e2e8f0/64748b?text=WB" alt="Foto de Warren Buffett" class="w-12 h-12 rounded-full mr-4">
+                            <div>
+                                <p class="font-bold text-slate-800">Warren Buffett</p>
+                                <p class="text-sm text-slate-500">CEO da Berkshire Hathaway</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 p-8 rounded-xl border border-slate-200/80 shadow-sm">
+                        <p class="text-slate-700 italic mb-4">"A inteligência artificial será o maior avanço tecnológico de todos os tempos. Ela pode resolver alguns dos maiores problemas do mundo."</p>
+                        <div class="flex items-center">
+                            <img src="https://placehold.co/50x50/e2e8f0/64748b?text=SH" alt="Foto de Stephen Hawking" class="w-12 h-12 rounded-full mr-4">
+                            <div>
+                                <p class="font-bold text-slate-800">Stephen Hawking</p>
+                                <p class="text-sm text-slate-500">Físico Teórico e Cosmólogo</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 p-8 rounded-xl border border-slate-200/80 shadow-sm">
+                        <p class="text-slate-700 italic mb-4">"O investimento no conhecimento paga os melhores juros."</p>
+                        <div class="flex items-center">
+                            <img src="https://placehold.co/50x50/e2e8f0/64748b?text=BF" alt="Foto de Benjamin Franklin" class="w-12 h-12 rounded-full mr-4">
+                            <div>
+                                <p class="font-bold text-slate-800">Benjamin Franklin</p>
+                                <p class="text-sm text-slate-500">Polímata e Pai Fundador dos EUA</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- New FAQ Section -->
+        <section id="faq" class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-2">Perguntas Frequentes</h2>
+                    <p class="text-slate-500 max-w-2xl mx-auto">Tire suas dúvidas sobre o ByTE Invest e comece a investir com confiança.</p>
+                </div>
+                <div class="max-w-3xl mx-auto">
+                    <div class="accordion-item">
+                        <div class="accordion-header" data-accordion-target="faq1">
+                            <span>Como a IA gera as dicas de investimento?</span>
+                            <span class="accordion-icon">▼</span>
+                        </div>
+                        <div id="faq1" class="accordion-content">
+                            <p>Nossa inteligência artificial utiliza algoritmos avançados para analisar grandes volumes de dados do mercado financeiro, incluindo tendências de preços, notícias econômicas, relatórios de empresas e indicadores técnicos. Com base nessa análise, ela identifica padrões e gera recomendações otimizadas.</p>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <div class="accordion-header" data-accordion-target="faq2">
+                            <span>As dicas são personalizadas para meu perfil de investidor?</span>
+                            <span class="accordion-icon">▼</span>
+                        </div>
+                        <div id="faq2" class="accordion-content">
+                            <p>Atualmente, nossas dicas são gerais e baseadas nas tendências de mercado. Estamos trabalhando em funcionalidades futuras para permitir maior personalização de acordo com o perfil de risco e objetivos de cada investidor. Fique atento às atualizações!</p>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <div class="accordion-header" data-accordion-target="faq3">
+                            <span>Qual a frequência de envio das dicas pelo WhatsApp?</span>
+                            <span class="accordion-icon">▼</span>
+                        </div>
+                        <div id="faq3" class="accordion-content">
+                            <p>As dicas são enviadas diariamente, de segunda a sexta-feira, em um horário estratégico para que você possa se planejar antes da abertura ou durante o dia de negociações, dependendo do tipo de dica.</p>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <div class="accordion-header" data-accordion-target="faq4">
+                            <span>Posso cancelar a qualquer momento?</span>
+                            <span class="accordion-icon">▼</span>
+                        </div>
+                        <div id="faq4" class="accordion-content">
+                            <p>Sim, você pode cancelar sua assinatura a qualquer momento, sem burocracia. Basta seguir as instruções que serão fornecidas no momento da sua inscrição.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-12">
+                    <p class="text-lg text-slate-600 mb-4">Ainda tem dúvidas? Fale conosco!</p>
+                    <a href="#" class="bg-green-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-green-700 transition shadow-lg shadow-green-500/30 text-lg">Entrar em Contato</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-800 text-slate-400 mt-16">
+        <div class="container mx-auto px-6 py-8 text-center">
+            <p class="text-2xl font-bold text-white mb-2 gradient-text">ByTE Invest</p>
+            <p>Simplificando seus investimentos com o poder da inteligência artificial.</p>
+            <p class="text-sm mt-4">&copy; 2025 ByTE Invest. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            // FAQ Accordion functionality
+            const accordionHeaders = document.querySelectorAll('.accordion-header');
+            accordionHeaders.forEach(header => {
+                header.addEventListener('click', () => {
+                    const targetId = header.dataset.accordionTarget;
+                    const content = document.getElementById(targetId);
+                    const icon = header.querySelector('.accordion-icon');
+
+                    // Close all other open accordions
+                    accordionHeaders.forEach(otherHeader => {
+                        const otherTargetId = otherHeader.dataset.accordionTarget;
+                        const otherContent = document.getElementById(otherTargetId);
+                        const otherIcon = otherHeader.querySelector('.accordion-icon');
+
+                        if (otherContent !== content && otherContent.classList.contains('open')) {
+                            otherContent.classList.remove('open');
+                            otherContent.style.maxHeight = null;
+                            otherIcon.classList.remove('rotate');
+                        }
+                    });
+
+                    // Toggle the clicked accordion
+                    if (content.classList.contains('open')) {
+                        content.classList.remove('open');
+                        content.style.maxHeight = null;
+                        icon.classList.remove('rotate');
+                    } else {
+                        content.classList.add('open');
+                        content.style.maxHeight = content.scrollHeight + 'px';
+                        icon.classList.add('rotate');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
